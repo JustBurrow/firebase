@@ -10,7 +10,7 @@ var config = {
   storageBucket: "study-5cff7.appspot.com",
   messagingSenderId: "349611704121"
 };
-firebase.initializeApp(config);
+firebase.initializeApp(config);;
 
 const messaging = firebase.messaging();
 console.log(messaging);
@@ -20,19 +20,33 @@ messaging.requestPermission()
     .then(function () {
       console.log('has permission.');
 
-      // 2. 토큰 확인.
-      messaging.getToken()
-          .then(function (currentToken) {
-            if (currentToken) {
-              console.log("has token.", currentToken);
-            } else {
-              console.log("no token");
-            }
-          })
-          .catch(function (err) {
-            console.log("err : %s", JSON.stringify(err));
-          });
     })
     .catch(function (err) {
       console.log('no permission. err ' + err);
     });
+
+// 2. 토큰 확인.
+messaging.getToken()
+    .then(function (currentToken) {
+      if (currentToken) {
+        console.log("has token.", currentToken);
+      } else {
+        console.log("no token");
+      }
+    })
+    .catch(function (err) {
+      console.log("get token err : %s", JSON.stringify(err));
+    });
+
+// 3. 토큰이 변경될 때 갱신하기.
+messaging.onTokenRefresh(function () {
+  messaging.getToken()
+      .then(function (currentToken) {
+        if (currentToken) {
+          console.log("token refreshed.", currentToken);
+        }
+      })
+      .catch(function (err) {
+        console.log("token refresh err : %s", JSON.stringify(err));
+      });
+});

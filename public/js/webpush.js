@@ -19,20 +19,20 @@ console.log(messaging);
 messaging.requestPermission()
     .then(function () {
       console.log('has permission.');
+
+      // 2. 토큰 확인.
+      messaging.getToken()
+          .then(function (currentToken) {
+            if (currentToken) {
+              console.log("has token.", currentToken);
+            } else {
+              console.log("no token");
+            }
+          })
+          .catch(function (err) {
+            console.log("err : %s", JSON.stringify(err));
+          });
     })
     .catch(function (err) {
       console.log('no permission. err ' + err);
-    });
-
-// 2. 토큰 확인.
-messaging.getToken()
-    .then(function (currentToken) {
-      if (currentToken) {
-        console.log("has token.", currentToken);
-      } else {
-        console.log("no token");
-      }
-    })
-    .catch(function (err) {
-      console.log("err : %s", JSON.stringify(err));
     });
